@@ -45,3 +45,27 @@ dic = {'X': [1, 2, 3, 4, 5], 'Y':[2, 3, 5, 4, 6] }
 #print(type_change(dic,list))
 
 #print(type_a(dic))
+
+def calculate_mode(data):
+    frequency_dict = {}
+    
+    # Count occurrences of each element in the list
+    for item in data:
+        if item in frequency_dict:
+            frequency_dict[item] += 1
+        else:
+            frequency_dict[item] = 1
+    
+    # Find the element(s) with the maximum count
+    max_frequency = max(frequency_dict.values())
+    modes = [key for key, value in frequency_dict.items() if value == max_frequency]
+    
+    if len(modes) == 1:
+        return modes[0]  # Single mode
+    else:
+        return modes  # Multiple modes
+
+# Example usage:
+data = [1, 2, 3, 3, 4, 5,  5, 6]
+print("Mode:", calculate_mode(data))
+
