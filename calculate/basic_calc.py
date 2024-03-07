@@ -62,12 +62,17 @@ def type_change(values, to):
 
 
 
-def statistical_analysis():
+def statistical_analysis(data):
     '''
     Calculates the basic statistical measures of data distribution.
     
     Calculates mean, median, mode, standard deviation, variance and range. 
     '''
+
+    mean = np.mean(data)
+    median = np.median(data)
+    
+    #Calculation of mode of dataset ()
 
 
 def hypothesis_test():
