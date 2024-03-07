@@ -1,7 +1,7 @@
 import numpy as np
-from uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
-from derivate import derivatives
-from basic_calc import least_squares_regression, type_change
+from .uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
+from .derivate import derivatives
+from .basic_calc import least_squares_regression, type_change
 
 random_measurements = [np.random.random() for _ in range(4)]
 random_int = np.random.randint(1,100)
