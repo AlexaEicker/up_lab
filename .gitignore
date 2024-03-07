@@ -1,5 +1,7 @@
 *.pyc
+
 flake.nix
 flake.lock
+
 .direnv/
 .envrc
