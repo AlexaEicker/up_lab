@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib as pl
 import pandas as pd
 from scipy.optimize import curve_fit
-import basic_functions as bf
+from .basic_functions import function_availibility
 
 #np.polyfit()
 
@@ -34,7 +34,7 @@ def least_square_method_fit(xdata, ydata, function=None, weighted=False, uncerta
     '''
 
     if function==None:
-        function = bf.function_availibility()
+        function = function_availibility()
     else:
         pass
     

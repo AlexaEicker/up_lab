@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import t
-from derivate import derivatives as derivate_derivatives
-from basic_calc import type_change
+from .derivate import derivatives as derivate_derivatives
+from .basic_calc import type_change
 
 def type_a(values):
     ''' Calculates type A uncertainty
