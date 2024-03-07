@@ -144,8 +144,8 @@ def hypothesis_test(*data):
         F_statistic_anova, p_value_anova = stats.f_oneway(*data)
         if len(data)==2:
             t_stat, p_value_t = stats.ttest_ind(data[0],data[1])
-
-            return F_statistic_anova, p_value_anova, t_stat, p_value_t
+            _,_, r_value_lin, p_value_lin,_ = stats.linregress(data[0], data[1])
+            return F_statistic_anova, p_value_anova, t_stat, p_value_t, r_value_lin, p_value_lin
 
         else:
             return F_statistic_anova,p_value_anova
