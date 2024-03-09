@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from scipy import stats
-from fitting.fit import 
 
 def type_change(values, to):
     '''
@@ -162,6 +161,7 @@ def hypothesis_test(*data):
     Pearson correlation analysis: scipy.stats.pearsonr()
     '''
     
+    #Assigns each test to its conditions
     if len(data)==1:
         chi2_statistic, p_value_chi, degrees_of_freedom_chi, _ = stats.chi2_contingency(data)
         return chi2_statistic, p_value_chi, degrees_of_freedom_chi
