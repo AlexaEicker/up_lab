@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy import stats
+from fitting.fit import 
 
 def type_change(values, to):
     '''
@@ -125,16 +126,40 @@ def statistical_analysis(data, dict_out=True):
 
 
 def hypothesis_test(*data):
-    #TODO: linear regression analysis, correlation analysis
     '''
     Tests data on common hypothesises by statistical test.
 
-    t - Test, chi**2 - Test, analysis of variance (ANOVA), regression analysis, correlation analysis.
-    For explanation of tests see help for:
-        t - Test: scipy.stats.ttest_ind()
-        chi**2 - Test: scipy.stats.chi2_contingency()
-        ANOVA: scipy.stats.f_oneway()
+    t - Test, chi**2 - Test, analysis of variance (ANOVA), linear regression analysis, Pearson correlation analysis.
+    =============================
 
+    Args:
+    *data: array_like or array of array_likes
+        All the data you have a hypothesis for. Send entire dataset.
+        Ex: Hypothesis: y=mx+b (m,b const) 
+        Send x,y as arrays to the function to test.
+    ==========================
+
+    Return:
+    Depending on amount of data arrays. Results of all possible hypothesis with the dataset.
+    If len(data)==1:
+    Chi**2 test: statistic, p value , degrees of freedom
+
+    If len(data)==2:
+    ANOVA: F statistic, p value
+    t Test: statistic, p value
+    linear regression: r value, p value
+    Correlation analysis: correlation coefficent, p value
+
+    Else:
+    ANOVA: F statistic, p value
+    =============================
+
+    For explanation of tests (function) see help for:
+    t - Test: scipy.stats.ttest_ind()
+    chi**2 - Test: scipy.stats.chi2_contingency()
+    ANOVA: scipy.stats.f_oneway()
+    Linear regression analysis: scipy.stats.linregress()
+    Pearson correlation analysis: scipy.stats.pearsonr()
     '''
     
     if len(data)==1:
@@ -145,17 +170,11 @@ def hypothesis_test(*data):
         if len(data)==2:
             t_stat, p_value_t = stats.ttest_ind(data[0],data[1])
             _,_, r_value_lin, p_value_lin,_ = stats.linregress(data[0], data[1])
-            return F_statistic_anova, p_value_anova, t_stat, p_value_t, r_value_lin, p_value_lin
+            correlation_coefficient, p_value_correlation = stats.pearsonr(data[0],data[1])
+            return F_statistic_anova, p_value_anova, t_stat, p_value_t, r_value_lin, p_value_lin, correlation_coefficient, p_value_correlation
 
         else:
             return F_statistic_anova,p_value_anova
-
-def polation():
-    '''
-    Calculation of interpolation and extrapolation.
-    
-    Interpolation: intermediate values between measured data points.
-    Extrapolation: Estimation of values beyond range of measured data.'''
 
 
 def least_squares_regression(X, Y):
