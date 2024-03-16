@@ -30,7 +30,7 @@ def type_change(values, to):
                 key = input("Enter key (name) of the value needed for this calculation:")
                 #Checks wheter input is valid. If not, requests new input and gives all possible keys
                 key_test = key not in values
-                if key_test ==True:
+                if key_test:
                     print("Given name is not in your dictionary.")
                     print("Here are all possible names: \n", values.keys())
                 else:
@@ -113,7 +113,7 @@ def statistical_analysis(data, dict_out=True):
     else:
         pass
     
-    if dict_out ==True:
+    if dict_out:
         return_dict = {'Mean': mean, 'Median': median,'Mode':modes, 'Standard deviation':standard_deviation, 'Variance':variance, 'Range':range}
         return return_dict
     else:

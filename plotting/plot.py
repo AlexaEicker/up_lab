@@ -3,8 +3,7 @@ from fitting.fit import least_square_method_fit
 
 
 def array_plot(xdata,ydata, xerr, yerr, weighted=False, function=None,data_label='Data',function_label=str,title='Title', fmt_data='bx',fmt_fit='r', *axis_label ):
-    """
-    Plots data with errorbars as well as 1 choosen fit.
+    """Plots data with errorbars as well as 1 choosen fit.
     =====================
 
     Args:
@@ -19,9 +18,16 @@ def array_plot(xdata,ydata, xerr, yerr, weighted=False, function=None,data_label
     axis_label: str
     title: str
         Default: Title
+        Title of plot
     fmt: str
         Default: bx (blue, x-Marker)
-    
+    ==============================
+
+    Return:
+    residuals: numpy Array
+    reduced chi**2: float
+    ======================
+    Opens plot (maybe??)
     """
 
     params, params_cov, function_fit, residuals,reduced_chisquare = least_square_method_fit(xdata,ydata,function,weighted,yerr)

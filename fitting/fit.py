@@ -33,12 +33,12 @@ def least_square_method_fit(xdata, ydata, function=None, weighted=False, uncerta
         reduced chi - square. Function is a good approximation if reduced chi - square is approximatly 1.
     '''
 
-    if function==None:
+    if function is None:
         function = function_availibility()
     else:
         pass
     
-    if weighted==False:
+    if not weighted:
         params, params_covariance = curve_fit(function, xdata,ydata)
     else:
         params, params_covariance = curve_fit(function, xdata, ydata, sigma=uncertainty, absolute_sigma=True)
