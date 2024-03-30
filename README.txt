@@ -1,1 +1,0 @@
-This is a collection of useful commands and analysing tools for the physics laboratory at University of Potsdam (Germany)
