@@ -1,17 +1,20 @@
 import numpy as np
 from scipy.stats import t
-from .derivate import derivatives as derivate_derivatives
-from .basic_calc import type_change
+from derivate import derivatives as derivate_derivatives
+from basic_calc import type_change
 
 def type_a(values):
     ''' Calculates type A uncertainty
 
     Type A uncertainty according to ISO/IEC Guide 98-3
-    
-    Args:
-    distribution: String, distribution of measurements. Default: Gauss
-    values: measured values taken in the experiment; numpy-array
+    ==========================
 
+    Args:
+    values: measured values taken in the experiment; numpy-array
+    ==============
+
+    Return:
+    float
     '''
 
     values = type_change(values,np.array)
@@ -33,8 +36,11 @@ def type_b(b=float, method=str):
     
     Args:
     b: Display increment as float
-    method: 'digital' or 'analog' depending of the type of measuring
-    
+    method: 'digital' or 'analog' depending of the type of measuring.
+    =====================
+
+    Return:
+    float
     '''
 
     if method=='digital':
@@ -42,7 +48,7 @@ def type_b(b=float, method=str):
     elif method=='analog':
         unc_typeb= b/(2*6**(1/2))
     else:
-        print("Your method could not be determind. Please type 'digital' or 'analog'")
+        print("Your method could not be determined. Please type 'digital' or 'analog'")
     return unc_typeb
 
 def device_acuracy(values,method=str, percentage=float, digit=int, scale_end=float):
@@ -81,7 +87,6 @@ def device_acuracy(values,method=str, percentage=float, digit=int, scale_end=flo
                 digit = 1 * 10**(-len(number_list[1]))
                 
             unc_device = values[i]*percentage + digit
-    print(type(unc_device))
     return unc_device
 
 
@@ -139,6 +144,15 @@ def error_propagation(uncertainties,typ=str):
 
     Return:
     float. 
+    ===============
+
+    Linear error propagation:
+    Use when the relationship between the variables and the function of interest is approximately linear,
+    and the uncertainties are small relative to the values of the variables.
+
+    Gaussian error propagation:
+    Use when the variables are not necessarily linearly related, but the uncertainties are assumed to follow a Gaussian distribution.
+    This method is applicable when dealing with a large number of independent and identically distributed random variables.
     '''
     
     uncertainties = type_change(uncertainties, list)

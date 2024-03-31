@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib as pl
 import pandas as pd
 from scipy.optimize import curve_fit
-#from fitting.basic_functions import function_availibility
-#from calculate.basic_calc import type_change
+from basic_functions import function_availibility
+#from ..calculate.basic_calc import type_change
 
 #TODO: import of functions and use of function if loop
 

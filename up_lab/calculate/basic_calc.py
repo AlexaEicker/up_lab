@@ -64,7 +64,6 @@ def type_change(values, to):
 
 
 
-#Write explanation on returns
 def statistical_analysis(data, dict_out=True):
     '''
     Calculates the basic statistical measures of data distribution.
