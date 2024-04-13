@@ -1,22 +1,25 @@
-#up_lab
+# up_lab
 
 up_lab is a library for calculating, fitting and plotting dataset measured in a physics laboratory.
 
-##What this does
+## What this does
 
 'Extended explanation of library'
+You can do a basic analysis and modelling of any data taken. 
 
-##Installation
+## Installation
 
 You can install the up_lab library from [PyPI](https://pypi.org/project/up_lab/):
 
     python -m pip install up_lab
 
-##How to use
+## How to use
 
 'Insert examples of code here'
+The following functions are available:
+type_change: Takes data in most common types and changes it to a numpy array or list.
 
-##How to contribute
+## How to contribute
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.

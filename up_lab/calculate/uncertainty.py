@@ -64,13 +64,13 @@ def device_acuracy(values,method=str, percentage=float, digit=int, scale_end=flo
         indicated acuracy. CAUTION: give as decimal 
             Ex: 2.0% please enter 0.02
     digit: int.
-        increasment by digits (given by producer). Type: Integer.
+        increasment by digits (given by producer). 
     scale_end: float.
-        Only needed with analog device. End of scale. Type: Float.
+        Only needed with analog device. End of scale. 
     ======================
 
     Return:
-    
+    float or numpy array
     '''
 
     values = type_change(values, np.array)
@@ -127,7 +127,7 @@ def expanded_unc(uncertainty, factor=int):
 
     return uncertainty*factor
 
-def error_propagation(uncertainties,typ=str):
+def error_propagation(uncertainties,type=str):
     '''
     Calculates the uncertainty according to linear and gaussian law of propagation of measurement uncertainties.
     This is needed when the variable is defined by the taken measurement variables. 
@@ -138,7 +138,7 @@ def error_propagation(uncertainties,typ=str):
     uncertainties: Array - like or float
         Uncertainties of all variables needed to calculate the uncertainty of variable. 
         If a variable is given or doesn't have an uncertainty, add '0' to your list.
-    typ: str.
+    type: str.
         'linear' or 'gaussian' for the respective type of error propagation.
     ==========
 
@@ -163,10 +163,10 @@ def error_propagation(uncertainties,typ=str):
     elif len(derivate)>len(uncertainties):
         raise ValueError("You entered MORE variables to derivate to than you have uncertainties. This does not work. Please check your formula, your variables and the uncertainties you entered.")
     else:
-        if typ=='linear':
+        if type=='linear':
             for i in range(0,len(derivate)):
                 list_multiplies.append(derivate[i]*uncertainties[i])
-        elif typ=='gaussian':
+        elif type=='gaussian':
             for i in range(0,len(derivate)):
                 list_multiplies.append((derivate[i]*uncertainties[i])**2)
         else:
@@ -176,3 +176,38 @@ def error_propagation(uncertainties,typ=str):
     return error_propagation
 
 
+def uncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1, type=str):
+    """
+    Calculates all uncertainties of the data.
+    ===========================
+    
+    Args:
+    data: numpy array
+        All the data of one size taken of which the uncertainty should be calculated.
+    type_b: float (optional)
+        Display increment for type b uncertainty (distance between two neighbouring scale steps)
+    method: str ('analog' or 'digital') (optional)
+        Method of measurement
+    percentage: indicated acuracy. CAUTION: give as decimal (optional)
+            Ex: 2.0% please enter 0.02
+    digit: int (optional)
+        increasment by digits (given by producer).
+    scale_end: float (optional)
+        Only needed with analog device. End of scale.
+    factor: int (optional)
+        Scale of expansion of uncertainty
+    type: str (optional)
+        'linear' or 'gaussian' for the respective type of error propagation.
+    ===========================
+    
+    Return:
+    array or float.
+    Combined uncertainty of all values.
+    """
+
+    unca = type_a(data)
+    uncb = type_b(b, method)
+    device = device_acuracy(data, method, percentage, digit,scale_end)
+    comb1 = combined_unc([unca,uncb,device])
+    expand = expanded_unc(comb1, factor)
+    return expand

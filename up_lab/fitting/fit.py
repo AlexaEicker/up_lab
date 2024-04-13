@@ -3,7 +3,7 @@ import matplotlib as pl
 import pandas as pd
 from scipy.optimize import curve_fit
 from basic_functions import function_availibility
-#from ..calculate.basic_calc import type_change
+
 
 #TODO: import of functions and use of function if loop
 
@@ -107,8 +107,9 @@ def reduced_chi_square(xdata, ydata, yerr, function, *args):
 
 
 #TEST LEAST_SQUARE_FIT
-X = np.array([1, 2, 3, 4, 5,6])
-Y = np.array([2, 3, 5, 4, 6,8])
-def funktion_hoer_mir_auf(x,a,b):
-    return b*x+a
-print(least_square_method_fit(X,Y,funktion_hoer_mir_auf))
+if __name__ =="__main__":
+    X = np.array([1, 2, 3, 4, 5,6])
+    Y = np.array([2, 3, 5, 4, 6,8])
+    def funktion_hoer_mir_auf(x,a,b):
+        return b*x+a
+    print(least_square_method_fit(X,Y,funktion_hoer_mir_auf))

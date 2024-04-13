@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
-#from fitting.fit import least_square_method_fit
+from fitting.fit import least_square_method_fit
 import numpy as np
 
 #TODO: import of least_square_method_fit!
 
-def array_plot(xdata,ydata, xerr=[0], yerr=[0], xlabel='x Axis',ylabel='y Axis', weighted=False, function=None,data_label='Data',function_label=str,title='Title', fmt_data='bx',fmt_fit='r',**kwargs):
+def array_plot(xdata,ydata, xerr=[0], yerr=[0], xlabel='x Axis',ylabel='y Axis', weighted=False, function=None,data_label='Data',function_label=str,title='Title', fmt_data='bx',fmt_fit='r',kwargs_func =dict, **kwargs):
     """Plots data in numpy - arrays with errorbars as well as 1 choosen fit.
     =====================
 
@@ -28,7 +28,8 @@ def array_plot(xdata,ydata, xerr=[0], yerr=[0], xlabel='x Axis',ylabel='y Axis',
         Title of plot
     fmt: str
         Default: bx (blue, x-Marker)
-    
+    kwargs_func: dict
+        dictionary of kwargs for plot of function. See matplotlib.pyplot.plot for available kwargs.
     ==============================
 
     Return:
@@ -47,7 +48,7 @@ def array_plot(xdata,ydata, xerr=[0], yerr=[0], xlabel='x Axis',ylabel='y Axis',
         num_plot = 2*len(xdata)
     else:
         num_plot = 1000
-    xplot = np.linspace(min(xdata),max(xdata), num=num_plot)
+    xplot = np.linspace(min(xdata),max(xdata), num=num_plot, **kwargs_func)
 
     plt.errorbar(xdata,ydata,yerr=yerr,xerr=xerr, fmt=fmt_data, capsize=1,**kwargs)
     if function==None:

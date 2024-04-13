@@ -1,7 +1,7 @@
 import numpy as np
-from .uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
-from .derivate import derivatives
-from .basic_calc import least_squares_regression, type_change
+from uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
+from derivate import derivatives
+from basic_calc import least_squares_regression, type_change
 
 random_measurements = [np.random.random() for _ in range(4)]
 random_int = np.random.randint(1,100)
@@ -11,7 +11,6 @@ print(len(random_measurements))
 #uncb = type_b(0.04,'digital')
 #print(uncb)
 
-#print("Combined ",combined_unc(random_measurements,0.04,'analog'))
 #conv = str(random_measurements[0])
 #decimal = str(random_measurements[0]%1).split('.')
 #decimal_len = len(decimal[1])
@@ -33,7 +32,7 @@ print(len(random_measurements))
 
 #Derivative test
 #print(derivatives())
-#print(error_propagation(random_measurements, 'gaussian'))
+print(error_propagation(random_measurements, 'gaussian'))
 
 
 X = [1, 2, 3, 4, 5]

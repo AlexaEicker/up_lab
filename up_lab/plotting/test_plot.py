@@ -14,7 +14,6 @@ plt.show()
 
 
 
-
 def tuple_return_test(a,b,c):
     returnval = [a,b,c]
     return *returnval,
