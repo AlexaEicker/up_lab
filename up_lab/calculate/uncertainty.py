@@ -1,7 +1,49 @@
 import numpy as np
 from scipy.stats import t
-from derivate import derivatives as derivate_derivatives
 from basic_calc import type_change
+from sympy import symbols, diff, simplify
+import fitting.basic_functions as basic_functions
+
+
+def derivatives(formula=None, variables=None, printderivatives = True):
+    '''
+    Calculates derivatives of typed in formula.
+    The formula and variables are asked during the process.
+    ===========================
+
+    Arg:
+    formula (optional): callable.
+        formula that determines size, of which the uncertainty should be calculated.
+    variables (optional): list of str.
+        Every entry is name of a variable that is measured.
+    printderivatives (optional): boolean.
+        Default: True
+        Disables print of all derivatives.
+        
+    Return:
+    derivatives: List of all derivatives. 
+    syms: list of all variables converted to sympy symbols.
+    '''
+
+    if formula ==None:
+        formula = input("Enter the formula (python - style): ")
+        variables = input("Enter the variables in the formula (comma-separated): ").split(',')
+    else:
+        formula = basic_functions.function_availibility
+        if formula==None:
+            raise ValueError("No function choosen.")
+        else:
+            pass
+
+    syms = symbols(variables)
+    derivatives = [simplify(diff(formula, sym)) for sym in syms]
+
+    if printderivatives:
+        print(f"Derivatives of {formula} :")
+        for var, derivative in zip(variables, derivatives):
+            print(f"With respect to {var}: {derivative}")
+    return derivatives,syms
+
 
 def type_a(values):
     ''' Calculates type A uncertainty
@@ -23,7 +65,7 @@ def type_a(values):
     values_sum=sum((values-values_mean)**2)
     unc_typea= (1/(N-1)*values_sum)**(1/2)/(N**(1/2))
 
-    # Calculate student factor for a confidence level of 68.3%  
+    # Calculate student factor for a confidence level of 68.3%  (typical for physics)
     if N<=100:
         student_factor = t.ppf(0.8415, df=N+1)
         unc_typea=student_factor*unc_typea
@@ -79,14 +121,14 @@ def device_acuracy(values,method=str, percentage=float, digit=int, scale_end=flo
     elif method=='digital':
         unc_device = np.zeros(len(values))
         for i in range(len(values)):
-            number = values[i]
-            if type(number)==int:
-                digit =1
+            valnumber = values[i]
+            if type(valnumber)==int:
+                digitinc = digit
             else:
-                number_list = str(number).split('.')
-                digit = 1 * 10**(-len(number_list[1]))
+                valnumber_list = str(valnumber).split('.')
+                digitinc = digit * 10**(-len(valnumber_list[1]))
                 
-            unc_device = values[i]*percentage + digit
+            unc_device[i] = values[i]*percentage + digitinc
     return unc_device
 
 
@@ -127,7 +169,9 @@ def expanded_unc(uncertainty, factor=int):
 
     return uncertainty*factor
 
-def error_propagation(uncertainties,type=str):
+
+
+def error_propagation(alldata, uncertainties,type='linear', formula=None, variables=None):
     '''
     Calculates the uncertainty according to linear and gaussian law of propagation of measurement uncertainties.
     This is needed when the variable is defined by the taken measurement variables. 
@@ -135,15 +179,21 @@ def error_propagation(uncertainties,type=str):
     ===========================
 
     Args:
+    alldata: List of Array - likes
+        All datasets the variable depends on in the EXACT same order as the uncertainties and variables.
+        If no variables are defined yet they will be requested during the function.
     uncertainties: Array - like or float
         Uncertainties of all variables needed to calculate the uncertainty of variable. 
         If a variable is given or doesn't have an uncertainty, add '0' to your list.
-    type: str.
-        'linear' or 'gaussian' for the respective type of error propagation.
+    type: str
+        'linear' or 'gaussian' for the respective type of error propagation. See explanation below.
+        Default: linear
+    formula: callable (optional)
+        formula that determines size, of which the uncertainty should be calculated.
     ==========
 
     Return:
-    float. 
+    numpy array of error propagation for every variable set.
     ===============
 
     Linear error propagation:
@@ -155,30 +205,40 @@ def error_propagation(uncertainties,type=str):
     This method is applicable when dealing with a large number of independent and identically distributed random variables.
     '''
     
+    k=0
+    error_prop = np.array
     uncertainties = type_change(uncertainties, list)
-    derivate = derivate_derivatives()
-    list_multiplies = []
+    derivate, varsymbol = derivatives(formula, variables, printderivatives=False)
     if len(derivate)<len(uncertainties):
         raise ValueError("You entered LESS variables to derivate to than you have uncertainties. This does not work. Please check your formula, your variables and the uncertainties you entered.")
     elif len(derivate)>len(uncertainties):
         raise ValueError("You entered MORE variables to derivate to than you have uncertainties. This does not work. Please check your formula, your variables and the uncertainties you entered.")
     else:
         if type=='linear':
-            for i in range(0,len(derivate)):
-                list_multiplies.append(derivate[i]*uncertainties[i])
+            for k in range(0, len(alldata[0])):
+                derval = 0
+                for i in range(0,len(derivate)):
+                    workingvar = varsymbol[i]
+                    workingval = alldata[i][k]
+                    derval+=derivate[i].subs(workingvar, workingval)*uncertainties[i]
+                error_prop[k]=derval
         elif type=='gaussian':
-            for i in range(0,len(derivate)):
-                list_multiplies.append((derivate[i]*uncertainties[i])**2)
+            for k in range(0, len(alldata[0])):
+                derval =0
+                for i in range(0,len(derivate)):
+                    workingvar = varsymbol[i]
+                    workingval = alldata[i][k]
+                    derval += (derivate[i].subs(workingvar,workingval)*uncertainties[i])**2
+                error_prop[k]=derval
         else:
             raise ValueError("Wrong type. Please type 'linear' or 'gaussian'.")
-        print(list_multiplies)
-        error_propagation = sum(list_multiplies)
     return error_propagation
 
 
 def uncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1, type=str):
     """
     Calculates all uncertainties of the data.
+    This does not include error propagation as that is a different type of uncertainty. Please execute error_propagation for that.
     ===========================
     
     Args:
