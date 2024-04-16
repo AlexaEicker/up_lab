@@ -16,7 +16,11 @@ You can install the up_lab library from [PyPI](https://pypi.org/project/up_lab/)
 ## How to use
 
 'Insert examples of code here'
+
+All interacting parties are expected to follow the [PSF Code of Conduct](https://policies.python.org/python.org/code-of-conduct/)
+
 The following functions are available:
+
 type_change: Takes data in most common types and changes it to a numpy array or list.
 
 ## How to contribute
