@@ -1,13 +1,107 @@
 import numpy as np
-import matplotlib as pl
+import matplotlib as plt
 import pandas as pd
 from scipy.optimize import curve_fit
-from basic_functions import function_availibility
+
+#Definition of typical fit functions
+
+def linear_fit(x,a,b):
+    return b*x+a
+
+def quadratic_function(x, a, b, c):
+    return a * x**2 + b * x + c
+
+def cubic_function(x, a, b, c, d):
+    return a * x**3 + b * x**2 + c * x + d
+
+def quartic_function(x, a, b, c, d, e):
+    return a * x**4 + b * x**3 + c * x**2 + d * x + e
+
+def exponential_function(x, a, b):
+    return a * np.exp(b * x)
+
+def logarithmic_function(x, a, b):
+    return a * np.log(x) + b
+
+def sigmoid_function(x, a, b):
+    return a / (1 + np.exp(-b * x))
+
+def power_law_function(x, a, b):
+    return a * x**b
+
+def gaussian_function(x, a, b, c):
+    return a * np.exp(-((x - b)**2) / (2 * c**2))
+
+def sine_function(x, a, b):
+    return a * np.sin(b * x)
+
+def cosine_function(x, a, b):
+    return a * np.cos(b * x)
+
+def tangent_function(x, a, b):
+    return a * np.tan(b * x)
 
 
-#TODO: import of functions and use of function if loop
+#
+#When adding a function to the dictionary, you HAVE to add its name (and mathematical expression (optional)) to function_name_dict.
+#Otherwise, user cannot choose the new function
+#
+function_dict = {
+    'Linear function': linear_fit, 
+    'Quadratic funtion' : quadratic_function,
+    'Cubic function': cubic_function,
+    'Quartic function':quartic_function,
+    'Exponential function':exponential_function,
+    'Sigmoid function':sigmoid_function,
+    'Power law function':power_law_function,
+    'Gaussian function':gaussian_function,
+    'Sine function':sine_function,
+    'Cosine function':cosine_function,
+    'Tangent function':tangent_function
+}
 
-def least_square_method_fit(xdata, ydata, function=None, weighted=False, uncertainty=0):
+#Adds mathematical expression to function name. When adding function to function_dict please update function_name_dict as well.
+function_name_dict = {
+    'Linear function': 'ax+b',
+    'Quadratic function': 'ax**2+bx+c',
+    'Cubic function': 'ax**3+bx**2+cx+d',
+    'Quartic function': 'ax**4+bx**3+cx**2+dx+e',
+    'Exponential function': 'ae**(bx)',
+    'Sigmoid function': 'a/1+e**(-bx)',
+    'Power law function': 'ax**b',
+    'Gaussian function': 'ae**(-(x-b)**2/2c**2)',
+    'Sine function': 'a sin(bx)',
+    'Cosine function' :'a cos(bx)',
+    'Tangent function':'a tan(bx)'
+}
+
+
+
+def function_availibility():
+        """
+        Choose from selection of basic functions.
+        Returns python function that was chosen during this function
+        """
+
+        print("Possible functions to choose from: \n")
+        #neater output of dictionary
+        for key,value in function_name_dict.items():
+            print(key,': ',value)
+        function_keys = input("Enter fitting function name as given above:")
+        key_test = function_keys not in function_dict
+        if key_test:
+            print("Function not defined. Please write your own function.")
+            function_avail=None
+        else:
+            function_avail = function_dict[function_keys]
+            print("Choosen function:\n", function_avail.__name__)
+        return function_avail
+
+
+
+
+
+def fit_ls(xdata, ydata, function=None, weighted=False, uncertainty=0):
     """
     Fits function to data using least square method.
     =========================
@@ -40,10 +134,8 @@ def least_square_method_fit(xdata, ydata, function=None, weighted=False, uncerta
     xdata = np.array(xdata)
     ydata = np.array(ydata)
 
-    #if function is None:
-       # function = function_availibility()
-    #else:
-       # pass
+    if function is None:
+        function = function_availibility()
     
     if not weighted:
         params, params_covariance = curve_fit(function, xdata,ydata)
@@ -55,14 +147,11 @@ def least_square_method_fit(xdata, ydata, function=None, weighted=False, uncerta
     for i in range(len(params)):
         params_cov = np.append(params_cov,(params_covariance[i][i])**(1/2))
 
-    #function values for all x data and residuals
     f_xdata = function(xdata, *params)
     residuals = f_xdata - ydata
     
-    #Reduced chi square
     rcs = reduced_chi_square(xdata, ydata,uncertainty,function, *params)
     return params,params_cov,f_xdata, residuals, rcs
-
 
 
 def chi_square(residuals, yerr):
@@ -78,6 +167,10 @@ def chi_square(residuals, yerr):
     
     Return:
     float.
+    ==========
+
+    Large values indicate a greater discrepance between observed and fitted frequencies.
+    When value exceedes a certain value, there is no association between the values.
     """
 
     chi_square = sum(1/yerr**2 * residuals**2)
@@ -103,13 +196,3 @@ def reduced_chi_square(xdata, ydata, yerr, function, *args):
 
     reduced_chi_square = 1/(len(xdata)-len(args))*np.sum((function(xdata, *args)-ydata)**2/yerr**2)
     return reduced_chi_square
-
-
-
-#TEST LEAST_SQUARE_FIT
-if __name__ =="__main__":
-    X = np.array([1, 2, 3, 4, 5,6])
-    Y = np.array([2, 3, 5, 4, 6,8])
-    def funktion_hoer_mir_auf(x,a,b):
-        return b*x+a
-    print(least_square_method_fit(X,Y,funktion_hoer_mir_auf))
