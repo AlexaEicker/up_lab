@@ -1,7 +1,21 @@
 import numpy as np
-from uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
-from derivate import derivatives
-from basic_calc import least_squares_regression, type_change
+#from uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
+#from derivate import derivatives
+#from basic_calc import least_squares_regression, type_change
+
+string='1324.56'
+eins=False
+zwei=False
+for char in string:
+    if char=='2':
+        zwei=True
+        if eins:
+            print('Eins kam schon, jetzt kommt zwei')
+    elif char=='1':
+        eins=True
+
+if '1' and '2' in string:
+    print("Es gibt ne 1 und ne 2")
 
 random_measurements = [np.random.random() for _ in range(4)]
 random_int = np.random.randint(1,100)
@@ -68,3 +82,26 @@ def calculate_mode(data):
 data = [1, 2, 3, 3, 4, 5,  5, 6]
 print("Mode:", calculate_mode(data))
 
+
+
+
+#digit access for device_accuracy 
+#This is bullshit
+def digit_access(number, digit):
+    """Recreates number only at digits point"""
+
+    number_str = str(number)
+    important_num = number_str[-digit]
+    if important_num=='.':
+        important_num = number_str[-(digit+1)]
+    print(important_num)
+    return_num = int
+    dotpos = int
+    dotposfound = False
+    i =0
+    while not dotposfound:
+        print(i)
+        for char in number_str:
+            if char=='.':
+                dotpos = i
+            i=i+1
