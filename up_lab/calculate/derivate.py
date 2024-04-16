@@ -1,7 +1,6 @@
 from sympy import symbols, diff, simplify
+import fitting.basic_functions as basic_functions
 
-#TODO: check wheter this is multiple derivatives and wheter I need higher derivatives somewhere
-#TODO: write code if formula in
 
 def derivatives(formula=None, variables=None):
     '''
@@ -23,7 +22,11 @@ def derivatives(formula=None, variables=None):
         formula = input("Enter the formula (python - style): ")
         variables = input("Enter the variables in the formula (comma-separated): ").split(',')
     else:
-        pass
+        formula = basic_functions.function_availibility
+        if formula==None:
+            raise ValueError("No function choosen.")
+        else:
+            pass
 
     syms = symbols(variables)
     derivatives = [simplify(diff(formula, sym)) for sym in syms]

@@ -61,12 +61,6 @@ def mi_to_m(mi):
     """
     return mi*1609.344
 
-#weight (chemical)
-#TODO: write this molar_mass function, though I still am not sure, what the input should be
-
-def molar_mass():
-    return
-
 #mass
 
 def oz_to_kg(oz):
