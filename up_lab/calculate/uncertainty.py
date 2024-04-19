@@ -235,7 +235,7 @@ def error_propagation(alldata, uncertainties,type='linear', formula=None, variab
     return error_propagation
 
 
-def uncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1, type=str):
+def totuncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1, type=str):
     """
     Calculates all uncertainties of the data.
     This does not include error propagation as that is a different type of uncertainty. Please execute error_propagation for that.
