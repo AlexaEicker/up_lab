@@ -41,7 +41,7 @@ def type_change(values, to):
             elif to ==np.array:
                 pass
             else:
-                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: \n np.array and list")
+                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: np.array and list")
             
         elif type(values)==list:
             if to==np.array:
@@ -49,17 +49,17 @@ def type_change(values, to):
             elif to==list:
                 pass
             else:
-                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: \n np.array and list")
+                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: np.array and list")
             
-        elif type(values)==np.array:
+        elif type(values)==np.ndarray:
             if to ==list:
                 values = values.tolist()
             elif to ==np.array:
                 pass
             else:
-                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: \n np.array and list")
+                raise ValueError("Wrong type for 'to' variable. Please check. Possible values: np.array and list")
         else:
-            raise TypeError("Unexpected type. Please change your variable type to\n a numpy - Array, list or dictionary.")
+            raise TypeError("Unexpected type. Please change your variable type to a numpy - Array, list or dictionary.")
     return values
 
 
@@ -92,6 +92,8 @@ def statistical_analysis(data, dict_out=True):
     '''
 
     data= type_change(data, np.array)
+    if len(data)==0:
+        raise ValueError("No data given.")
     #Calculation of measures provided by numpy 
     #mean, median, range
     mean = np.mean(data)
