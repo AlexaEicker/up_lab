@@ -43,6 +43,15 @@ def in_to_m(inch):
     """
     return inch*0.0254
 
+def m_to_in(meter):
+    """Meter to inch.
+    Arg:
+    meter: float or array_like
+    Return:
+    inch: float or array_like
+    """
+    return meter/0.0254
+
 def ft_to_m(ft):
     """Feet to meter.
     Arg:
@@ -52,6 +61,15 @@ def ft_to_m(ft):
     """
     return ft*0.3048
 
+def m_to_ft(meter):
+    """Meter to feet
+    Arg:
+    meter: float or array_like
+    Return:
+    feet: float or array_like
+    """
+    return meter/0.3048
+
 def mi_to_m(mi):
     """Mile to meter.
     Arg:
@@ -60,6 +78,15 @@ def mi_to_m(mi):
     m: float or array_like
     """
     return mi*1609.344
+
+def m_to_mi(meter):
+    """Meter to mile.
+    Arg:
+    meter: float or array_like
+    Return:
+    mile: float or array_like
+    """
+    return meter/1609.344
 
 #mass
 
@@ -75,18 +102,40 @@ def oz_to_kg(oz):
     """
     return oz*28.349523125*10**(-3)
 
-def lb_to_kg(lb):
+def kg_to_oz(kg):
+    """Kilogram to ounce.
+    Arg:
+    kg: float or array_like
+    Return: 
+    oz: float or array_like
+    ================
+    Caution:
+    International avoirdupois ounce"""
+    return (kg/28.349523125)*10**(3)
+
+def lbs_to_kg(lbs):
     """Pound to kilogram.
     Arg:
-    lb: float or array_like
+    lbs: float or array_like
     Return:
     kg: float or array_like
     =============
     Caution:
     Avoirdupois weight, not troy or apothecaries weight
     """
-    return lb*0.45359237 
+    return lbs*0.45359237 
 
+def kg_to_lbs(kg):
+    """Kilogram to pound.
+    Arg:
+    kg: float or array_like
+    Return:
+    lbs: float or array_like
+    ==============
+    Caution:
+    Avoirdupois weight, not troy or apothecaries weight
+    """
+    return kg/0.45359237
 
 #time
 
