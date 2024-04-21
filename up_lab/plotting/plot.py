@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-from fitting.fit import fit_ls
+from up_lab.fitting.fit import fit_ls
 import numpy as np
  
 
-def array_plot(xdata,ydata, xerr=None, yerr=None, xlabel='x Axis',ylabel='y Axis', weighted=False, function=None,data_label='Data',function_label=str,title='Title', fmt_data='bx',fmt_fit='r',xscale = 'cartesian', yscale='cartesian',kwargs_func =dict,data=None, **kwargs):
+def array_plot(xdata,ydata, xerr=None, yerr=None, xlabel='x Axis',ylabel='y Axis', weighted=False, function=None,data_label='Data',function_label=str,title='Title', fmt_data='b.',fmt_fit='r',xscale = 'linear', yscale='linear',kwargs_func =dict,data=None, **kwargs):
     """Plots data in numpy - arrays with errorbars as well as 1 choosen fit.
     =====================
 
@@ -76,10 +76,13 @@ def array_plot(xdata,ydata, xerr=None, yerr=None, xlabel='x Axis',ylabel='y Axis
         else:
             num_plot = 1000
         xplot = np.linspace(min(xdata),max(xdata), num=num_plot)
-        if not function_label:
+        if function_label==str:
             function_label ="Fit of " +function.__name__
-        params, params_cov, function_fit, residuals,reduced_chisquare = fit_ls(xdata,ydata,function,weighted,yerr)
-        plt.plot(xplot, function(xdata, *params), fmt=fmt_fit, label=function_label, **kwargs_func)
+        params, params_cov, function_fit, residuals,reduced_chisquare = fit_ls(xdata,ydata,function,weighted=weighted,yerr=yerr)
+        if len(kwargs)==0:
+            plt.plot(xplot, function(xplot, *params), fmt_fit, label=function_label)
+        else:
+            plt.plot(xplot, function(xplot, *params), fmt_fit, label=function_label, **kwargs_func)
         return_val = [params, params_cov, residuals, reduced_chisquare]
     
     plt.grid(True)
