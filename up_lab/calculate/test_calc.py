@@ -1,8 +1,5 @@
-import numpy as np
-#from uncertainty import type_a, type_b, combined_unc, device_acuracy, error_propagation
-#from derivate import derivatives
-#from basic_calc import least_squares_regression, type_change
 if __name__ =="__main__":
+    import numpy as np
     #from basic_calc import type_change
     #numpydata = np.array([1,2,3,4])
     #print('Anfang: ',numpydata, type(numpydata))
@@ -61,22 +58,52 @@ if __name__ =="__main__":
     #print("M to ft: ", conversion.m_to_ft(meter), "Miles to m: ", conversion.mi_to_m(mi), "M to miles: ", conversion.m_to_mi(meter))
     #print("Mass \n", "Oz to kg: ", conversion.oz_to_kg(oz), "Kg to oz: ", conversion.kg_to_oz(kg), "Lbs to kg: ", conversion.lbs_to_kg(lbs))
     #print("Kg to lbs: ", conversion.kg_to_lbs(kg))
-    #print("Time \n", "Min to sec: ", conversion.min_to_sec(min), "Sec to min: ", conversion.sec_to_min(sec), "h to min: ", conversion.h_to_min(h))
+    #print("Time \n", "Min to sec: ", conversion.min_to_sec(min), "Sec to min: ", conversion.sec_to_min(sec), "h to min: ", conversion.h_to_min(h)) 
     #print("min to h: ", conversion.min_to_h(min), "Sec to h: ", conversion.sec_to_h(sec), "h to sec: ", conversion.h_to_sec(h))
 
-    from uncertainty import type_a, type_b
-    tenperiods = [11.41,11.91,11.87]
-    print(type_a(tenperiods))
-    #Step on measuring device
-    a=0.001
-    print("Digital uncertainty:",type_b(a,'digital'))
-    print("Analog:", type_b(a,'analog'))
-    print("Wrong method:", type_b(a,'Analog'))
+    #from uncertainty import type_a, type_b
+    #tenperiods = [11.41,11.91,11.87]
+    #print(type_a(tenperiods))
+    ##Step on measuring device
+    #a=0.001
+    #print("Digital uncertainty:",type_b(a,'digital'))
+    #print("Analog:", type_b(a,'analog'))
+#                                                                                                                                                       
+    #print("Wrong method:", type_b(a,'Analog'))
+#
+    from uncertainty import type_a,type_b,device_acuracy, combined_unc, expanded_unc,error_propagation
+    #tenperiods1 = np.array([11.41,11.91,11.87])
+    #periods1 = tenperiods1/10
+    #length1 = np.array([36.3,36.3,36.3])
+    #typea_periods1 = type_a(periods1)
+    #typeb_length1 = type_b(0.1, 'analog')
+    #clockacuracy = device_acuracy(periods1,'digital',percentage=0.0001, digit=1)
+    #uncperiod = combined_unc([typea_periods1,clockacuracy])
+    #lenghtexp = expanded_unc(typeb_length1,1.5)
+    #print("Type A for periods1:",typea_periods1)
+    #print("Type B for length1:", typeb_length1)
+    #print("Clock acuracy:", clockacuracy)
+    #print("Uncertainty period:", uncperiod)
+    #print("Expanded lenght uncertainty (by factor 1.5):", lenghtexp)
+    #print(error_propagation([periods1,length1], [typea_periods1,typeb_length1], formula="4*pi**2*l/(T**2)", variables='l,T'))
 
-
-
-
-
+    from uncertainty import totuncertainty
+    #tenperiods1 = np.array([11.41,11.91,11.87])
+    #periods1 = tenperiods1/10
+   # print(totuncertainty(periods1, method='digital', percentage=0.0001, digit=1))
+    #print(uncperiod) #Unsicherheit schrittweise berechnet und dann zusammengefügt
+    tenperiods2 = np.array([14.25,13.75,13.63,16.59,16.47,16.44,43.31, 43.35,43.22,44.85, 44.82,44.90])
+    periods2 = tenperiods2/10
+    periods2p1data = periods2[[0,1,2]]
+    periods2p2data = periods2[[3,4,5]]
+    periods2p3data = periods2[[6,7,8]]
+    periods2p4data = periods2[[9,10,11]]
+    length2 = np.array([54.6,54.6,54.6,80.9,80.9,80.9,466.6,466.6,466.6,501.8,501.8,501.8])
+    length2p1 = type_b(0.1,'analog')
+    length2p2 = type_b(1,'analog')
+    periods2p1 = totuncertainty(periods2[[0,1,2]], method='digital', percentage=0.0001, digit=1)
+    print(periods2p1)
+    print(totuncertainty())
 
 
 
