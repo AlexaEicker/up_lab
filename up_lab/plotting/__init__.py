@@ -1,1 +1,1 @@
-from plot import array_plot
+from up_lab.plotting.plot import array_plot
