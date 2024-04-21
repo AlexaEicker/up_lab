@@ -5,8 +5,8 @@ from scipy.optimize import curve_fit
 
 #Definition of typical fit functions
 
-def linear_fit(x,a,b):
-    return b*x+a
+def linear_function(x,a,b):
+    return a*x+b
 
 def quadratic_function(x, a, b, c):
     return a * x**2 + b * x + c
@@ -47,7 +47,7 @@ def tangent_function(x, a, b):
 #Otherwise, user cannot choose the new function
 #
 function_dict = {
-    'Linear function': linear_fit, 
+    'Linear function': linear_function, 
     'Quadratic funtion' : quadratic_function,
     'Cubic function': cubic_function,
     'Quartic function':quartic_function,
@@ -77,10 +77,14 @@ function_name_dict = {
 
 
 
-def function_availibility():
+def function_availibility(formulaout=False):
         """
         Choose from selection of basic functions.
-        Returns python function that was chosen during this function
+        Returns python function that was chosen during this function.
+
+        Arg:
+        formulaout: bool
+            Default: False. If True, output is a string.
         """
 
         print("Possible functions to choose from: \n")
@@ -93,15 +97,18 @@ def function_availibility():
             print("Function not defined. Please write your own function.")
             function_avail=None
         else:
-            function_avail = function_dict[function_keys]
-            print("Choosen function:\n", function_avail.__name__)
+            if not formulaout:
+                function_avail = function_dict[function_keys]
+                print("Choosen function:\n", function_avail.__name__)
+            else:
+                function_avail = function_name_dict[function_keys]
         return function_avail
 
 
 
 
 
-def fit_ls(xdata, ydata, function=None, weighted=False, uncertainty=0):
+def fit_ls(xdata, ydata, function=None,yerr=0, weighted=False):
     """
     Fits function to data using least square method.
     =========================
@@ -113,12 +120,12 @@ def fit_ls(xdata, ydata, function=None, weighted=False, uncertainty=0):
         Dependent variable.
     function: callable, optional
         Default None to choose from selection of basic functions.
+    yerr: array_like, optional
+        Uncertainty in ydata.
+        Necessary for weighted fit (not representative otherwise) and reduced chi^2.
     weighted: bool, optional
         Should fit be weighted? Yes = True, No = False.
         Default: False.
-    uncertainty: array_like, optional
-        Uncertainty in ydata!
-        Only neccessary for weighted least square fit.
     ============
     
     Return:
@@ -133,24 +140,23 @@ def fit_ls(xdata, ydata, function=None, weighted=False, uncertainty=0):
 
     xdata = np.array(xdata)
     ydata = np.array(ydata)
-
     if function is None:
         function = function_availibility()
     
     if not weighted:
         params, params_covariance = curve_fit(function, xdata,ydata)
     else:
-        params, params_covariance = curve_fit(function, xdata, ydata, sigma=uncertainty, absolute_sigma=True)
+        params, params_covariance = curve_fit(function, xdata, ydata, sigma=yerr, absolute_sigma=True)
 
     #Covariance of all parameters of function (sqrt of values on main diagonal of params_covariance matrix)
-    params_cov = np.array
+    params_cov = np.array([])
     for i in range(len(params)):
         params_cov = np.append(params_cov,(params_covariance[i][i])**(1/2))
 
     f_xdata = function(xdata, *params)
     residuals = f_xdata - ydata
-    
-    rcs = reduced_chi_square(xdata, ydata,uncertainty,function, *params)
+
+    rcs = reduced_chi_square(xdata, ydata,yerr,function, *params)
     return params,params_cov,f_xdata, residuals, rcs
 
 
