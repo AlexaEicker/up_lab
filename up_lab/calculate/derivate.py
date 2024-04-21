@@ -1,5 +1,5 @@
 from sympy import symbols, diff, simplify
-import fitting.basic_functions as basic_functions
+import up_lab.fitting.basic_functions as basic_functions
 
 
 def derivatives(formula=None, variables=None):
