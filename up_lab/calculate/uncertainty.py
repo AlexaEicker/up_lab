@@ -1,11 +1,11 @@
 import numpy as np
 from scipy.stats import t
-from basic_calc import type_change
+from up_lab.calculate.basic_calc import type_change
 from sympy import symbols, diff, simplify
-import fitting.basic_functions as basic_functions
+import up_lab.fitting.fit as fit
 
 
-def derivatives(formula=None, variables=None, printderivatives = True):
+def derivatives(formula=str, variables=str, printderivatives = True):
     '''
     Calculates derivatives of typed in formula.
     The formula and variables are asked during the process.
@@ -25,15 +25,9 @@ def derivatives(formula=None, variables=None, printderivatives = True):
     syms: list of all variables converted to sympy symbols.
     '''
 
-    if formula ==None:
+    if formula==str:
         formula = input("Enter the formula (python - style): ")
         variables = input("Enter the variables in the formula (comma-separated): ").split(',')
-    else:
-        formula = basic_functions.function_availibility
-        if formula==None:
-            raise ValueError("No function choosen.")
-        else:
-            pass
 
     syms = symbols(variables)
     derivatives = [simplify(diff(formula, sym)) for sym in syms]
@@ -46,7 +40,7 @@ def derivatives(formula=None, variables=None, printderivatives = True):
 
 
 def type_a(values):
-    ''' Calculates type A uncertainty
+    ''' Calculates type A uncertainty. Use when multiple measurements of the same state where taken.
 
     Type A uncertainty according to ISO/IEC Guide 98-3
     ==========================
@@ -73,7 +67,7 @@ def type_a(values):
     
 def type_b(b=float, method=str):
     '''
-    Calculates type B uncertainty according to ISO/IEC Guide 98-3
+    Calculates type B uncertainty according to ISO/IEC Guide 98-3. Use when calculating uncertainty 
     ========================
     
     Args:
@@ -90,7 +84,8 @@ def type_b(b=float, method=str):
     elif method=='analog':
         unc_typeb= b/(2*6**(1/2))
     else:
-        print("Your method could not be determined. Please type 'digital' or 'analog'")
+        raise ValueError("Your method could not be determined. Please type 'digital' or 'analog'")
+
     return unc_typeb
 
 def device_acuracy(values,method=str, percentage=float, digit=int, scale_end=float):
@@ -154,13 +149,13 @@ def combined_unc(uncertainties):
     return unc
 
 
-def expanded_unc(uncertainty, factor=int):
+def expanded_unc(uncertainty, factor=float):
     '''Calculates expanded uncertainty.
     =================================
     
     Args:
     uncertainty: list or float
-    factor: integer
+    factor: float
         Scales the expansion of the uncertainty
     ===================
     
@@ -171,7 +166,7 @@ def expanded_unc(uncertainty, factor=int):
 
 
 
-def error_propagation(alldata, uncertainties,type='linear', formula=None, variables=None):
+def error_propagation(alldata, uncertainties,type='linear', formula=str, variables=str):
     '''
     Calculates the uncertainty according to linear and gaussian law of propagation of measurement uncertainties.
     This is needed when the variable is defined by the taken measurement variables. 
@@ -208,7 +203,7 @@ def error_propagation(alldata, uncertainties,type='linear', formula=None, variab
     k=0
     error_prop = np.array
     uncertainties = type_change(uncertainties, list)
-    derivate, varsymbol = derivatives(formula, variables, printderivatives=False)
+    derivate, varsymbol = derivatives(formula=formula, variables=variables, printderivatives=False)
     if len(derivate)<len(uncertainties):
         raise ValueError("You entered LESS variables to derivate to than you have uncertainties. This does not work. Please check your formula, your variables and the uncertainties you entered.")
     elif len(derivate)>len(uncertainties):
@@ -235,15 +230,16 @@ def error_propagation(alldata, uncertainties,type='linear', formula=None, variab
     return error_propagation
 
 
-def totuncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1, type=str):
+def totuncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end=float, factor=1):
     """
-    Calculates all uncertainties of the data.
+    Calculates all uncertainties of the data in the same state.
     This does not include error propagation as that is a different type of uncertainty. Please execute error_propagation for that.
     ===========================
     
     Args:
     data: numpy array
-        All the data of one size taken of which the uncertainty should be calculated.
+        All the data of one size taken in the same state of which the uncertainty should be calculated.
+        If you have a list of data in which only parts are in the same state, use data[[ALL INDICES OF DATA IN SAME STATE]]
     type_b: float (optional)
         Display increment for type b uncertainty (distance between two neighbouring scale steps)
     method: str ('analog' or 'digital') (optional)
@@ -255,9 +251,7 @@ def totuncertainty(data, b=0, method=str, percentage=float, digit=int, scale_end
     scale_end: float (optional)
         Only needed with analog device. End of scale.
     factor: int (optional)
-        Scale of expansion of uncertainty
-    type: str (optional)
-        'linear' or 'gaussian' for the respective type of error propagation.
+        Scale of expansion of uncertainty.
     ===========================
     
     Return:
